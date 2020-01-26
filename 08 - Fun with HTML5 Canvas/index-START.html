@@ -7,6 +7,83 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+
+// grab the canva
+const canvas = document.querySelector("#draw");
+
+// context - where we will draw
+const ctx = canvas.getContext('2d');
+
+// size up the canvas the be the exact width of the window
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// set the color
+ctx.strokeStyle = '#BADA55';
+// style of the line
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.lineWidth = 50;
+
+// only draws when curser is down
+let isDrawing = false;
+
+// when you start & where you stop the line drawn
+let lastX = 0;
+let lastY = 0;
+let hue = 0;
+let direction = true;
+
+// called when mouse is moved on top of the canvas
+function draw(e) {
+  if(!isDrawing) return; // stop function from drawing when not moused down
+  console.log(e);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+  // begins a path
+  ctx.beginPath();
+  // start from (moves the path to the specified point in the canvas)
+  ctx.moveTo(lastX, lastY);
+  // go to (adds a new point and creates a line to that point from the last specified point in the canvas)
+  ctx.lineTo(e.offsetX, e.offsetY);
+  // actually draws the path defined
+  ctx.stroke();
+  // when function is done, need to update :
+  // lastX = e.offsetX;
+  // lastY = e.offsetY;
+  // destructuring an array, <=>
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+  hue ++;
+  // reset hue when it reaches 360
+  if(hue >= 360) {
+    hue = 0;
+  }
+
+  // increment the linewidth
+  if(ctx.lineWidth >= 50 || ctx.lineWidth <= 10) {
+    // flip direction
+    direction = !direction;
+  }
+  if(direction) {
+    // depending of the direction it will increase or decrease the line width
+    ctx.lineWidth++;
+  } else {
+    ctx.lineWidth--;
+  }
+};
+
+canvas.addEventListener('mousedown', (e) => {
+  isDrawing = true;
+  // as soon as mousedown to start drawing, it start from where the curser was instead of starting at 0
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+
+
+  });
+
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', () => isDrawing = false);
+// clickdown, leave the window, mouse out, not longer drawing
+canvas.addEventListener('mouseout', () => isDrawing = false);
+
 </script>
 
 <style>

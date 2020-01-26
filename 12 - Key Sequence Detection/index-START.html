@@ -7,6 +7,27 @@
 </head>
 <body>
 <script>
+
+const pressed = [];
+const secretCode = 'morgane';
+
+window.addEventListener('keyup', (e) => {
+  // to know the key that was pressed
+  // console.log(e.key);
+  // to add pressed key in an array
+  pressed.push(e.key);
+  // trim the array to be the max needed = 7 characters
+  // -secretCode : to start from the end of the array
+  pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length);
+  // turns it to a string
+  if(pressed.join('').includes(secretCode)) {
+    // console.log('well done');
+    // add unicorn image every time the secret code is found
+    cornify_add();
+  }
+  // console.log(pressed);
+})
+
 </script>
 </body>
 </html>

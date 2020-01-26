@@ -59,6 +59,25 @@
 
 <script>
 
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); // select audio element
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); //class of key or div
+    if(!audio) return; // if no audio associated, stop the function from running all together
+    audio.currentTime = 0; // rewind to start
+    audio.play(); // play sound
+    key.classList.add('playing'); // add css class to the key element
+  }
+
+  function removeTransition(e) {
+    if(e.propertyName !== 'transform') return; // skip if not a transform
+    this.classList.remove('playing'); // this equal to the key
+  }
+
+  const keys = document.querySelectorAll('.key'); // gives an array of every element that is matched
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); // loop over key element, if transition end remove transition
+
+  window.addEventListener('keydown', playSound); // event listener, type of the event & function associated
+
 </script>
 
 
