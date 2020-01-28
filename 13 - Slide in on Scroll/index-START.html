@@ -43,6 +43,7 @@
   </div>
 
   <script>
+    // fire function after action has finished fo a defined amount of time
     function debounce(func, wait = 20, immediate = true) {
       var timeout;
       return function() {
@@ -58,6 +59,35 @@
       };
     }
 
+    // select all images
+    const images = document.querySelectorAll('.slide-in')
+
+    // function that will run when user scrolls
+    function checkSlide(e) {
+      // loop over image and found out when image needs to be shown
+      images.forEach(image => {
+        // half way through image
+        // window.scrollY how much you scroll down at the very top of the browser
+        // + window.innerHeight : will give pixel level where user is currently
+        // - image.height / 2 : when user has scroll down at the middle of the image
+        const slidInAt = (window.scrollY + window.innerHeight)
+        - image.height / 2;
+        // bottom of image
+        // offsetTop : h ow far top of image is from top window
+        const imageBottom = image.offsetTop + image.height;
+
+        const isHalfShown = slidInAt > image.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        if(isHalfShown && isNotScrolledPast) {
+          image.classList.add('active');
+        } else {
+          image.classList.remove('active');
+        }
+      })
+    }
+
+    window.addEventListener('scroll', debounce(checkSlide))
+
   </script>
 
   <style>
@@ -68,11 +98,11 @@
       font-size: 20px;
       font-weight: 200;
     }
-    
+
     body {
       margin: 0;
     }
-    
+
     *, *:before, *:after {
       box-sizing: inherit;
     }
@@ -100,6 +130,7 @@
     }
 
     .slide-in {
+      /*hide the image */
       opacity: 0;
       transition: all .5s;
     }
@@ -107,7 +138,7 @@
     .align-left.slide-in {
       transform: translateX(-30%) scale(0.95);
     }
-    
+
     .align-right.slide-in {
       transform: translateX(30%) scale(0.95);
     }
