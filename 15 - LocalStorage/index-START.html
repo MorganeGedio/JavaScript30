@@ -28,7 +28,58 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+
+  function addItem(e) {
+  e.preventDefault();
+  // get user input
+  const text = (this.querySelector('[name=item]')).value;
+  const item = {
+    text: text,
+    done: false
+  };
+  items.push(item);
+  populateList(items, itemsList);
+  // local storage : only string
+  // item added is put in local storage
+  localStorage.setItem('items', JSON.stringify(items));
+  // refresh and clear what was written
+  this.reset();
+  // console.log(items)
+}
+
+// when item is added, function called, create list item with a lable
+
+// items array will be passed - default empty object, if nothing passed, no code breaking
+// place to put the html
+function populateList(plates = [], platesList) {
+  // loop over array and will return an array
+  // .joib n to return a string
+  platesList.innerHTML = plates.map((plate, i) => {
+    return `
+     <li>
+      <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''}/>
+      <label for="item${i}">${plate.text}</label>
+     </li>
+  `;
+  }).join('');
+}
+
+// keep the checkbox checked on refresh
+function toggleDone(e) {
+  if(!e.target.matches('input')) return; // this this unless it's a input
+  const element = e.target;
+  // console.log(element.dataset.index);
+  const index = element.dataset.index;
+  items[index].done = !items[index].done;
+  localStorage.setItem('items', JSON.stringify(items));
+  populateList(items, itemsList);
+}
+
+addItems.addEventListener('submit', addItem);
+itemsList.addEventListener('click', toggleDone);
+
+populateList(items, itemsList)
 
 </script>
 
